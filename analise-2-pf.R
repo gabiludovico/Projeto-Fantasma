@@ -1,9 +1,11 @@
 #Análise 2: Variação do preço por marca
 
 
-selecionando_marcas <- select(vendas,"Brand","Price")
+selecionando_marcas <- select(vendas,"Brand","Price","Product ID")
 tabela_marcas <- na.omit(selecionando_marcas)
-tabela_marcas_preco <- tabela_marcas %>%
+dados_sem_duplicatas <- tabela_marcas%>%
+  distinct(`Product ID`, .keep_all = TRUE)
+tabela_marcas_preco <- dados_sem_duplicatas %>%
   group_by(Brand) %>%
   summarise(Preço = sum(Price)) %>%
   arrange(desc(Preço))
@@ -46,3 +48,9 @@ aes(x =reorder(Brand,-Preço), y = Preço) +
   labs(x = "Marca", y = "Preço") +
   theme_estat()
 ggsave("grafico_colunas_An2.pdf", width = 158, height = 93, units = "mm")
+
+# tabela com a quantidade de roupas por marca e o preço médio
+tabela_preço_marca <- dados_sem_duplicatas  %>%
+  group_by(Brand) %>%
+  summarise(Quantidade =n(),PrecoMedio = mean(Price))
+tabela_preço_marca  
