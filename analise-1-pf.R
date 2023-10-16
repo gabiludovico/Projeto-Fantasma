@@ -2,12 +2,10 @@
 #Análise 1: Faturamento anual por categoria
 
 # tabela com o faturamento mensal por categoria
-vendas_1 <- select(vendas,"Category","Price","Motivo devolução","Data Venda","Product ID")
-tabela_faturamento <- vendas_1[is.na(vendas_1$`Motivo devolução`),]
-dados_sem_duplicacao <- tabela_faturamento%>%
+vendas_1 <- select(vendas,"Category","Price","Data Venda","Product ID")
+dados_sem_duplicacao <- vendas_1%>%
   distinct(`Product ID`, .keep_all = TRUE)
-tabela_faturamento_reduzida <- select(dados_sem_duplicacao, Category, Price,`Data Venda`)
-tabela_sem_NA <- na.omit(tabela_faturamento_reduzida)
+tabela_sem_NA <- na.omit(dados_sem_duplicacao)
 tabela_sem_NA$Data_Venda <- as.Date(tabela_sem_NA$`Data Venda`, format = "%m/%d/%Y")
 tabela_base <-  tabela_sem_NA %>%
    select(Category,Price, Data_Venda)
@@ -37,9 +35,8 @@ Tabela_vendas <- total_vendas_1 %>%
 
 
 # Calculo para a tabela com o preço total
-vendas_2 <- select(vendas,"Category","Price","Motivo devolução","Data Venda","Product ID")
-tabela_p_preço <- vendas_2[is.na(vendas_1$`Motivo devolução`),]
-dados_nao_duplicados <- tabela_p_preço %>%
+vendas_2 <- select(vendas,"Category","Price","Data Venda","Product ID")
+dados_nao_duplicados <- vendas_2 %>%
   distinct(`Product ID`, .keep_all = TRUE)
 tabela_preço_resumida <- select(dados_nao_duplicados, Category, Price,`Data Venda`)
 tabela_preço_resumida
@@ -72,7 +69,7 @@ preço_total
    )
  }
  
- cores_estat <- c('#A11D21','#663333','#FF6600','#CC9900','#CC9966','#999966','#006606','#008091','#003366','#041835','#666666')
+ cores_estat <- c('#A11D21','#003366','#CC9900','#663333','#FF6600','#CC9966','#999966','#006606','#008091','#041835','#666666')
  
  ##Fazendo gráfico de linhas
  ggplot(Tabela_vendas, aes(x = Mes, y= Total_Vendas, group = Categoria, colour = Categoria)) +
@@ -81,7 +78,7 @@ preço_total
    scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
    labs(x= "Mês", y = "Faturamento") + 
    theme_estat() 
- ggsave("gráfico_linhas_An1.pdf", width = 158, height = 93, units = "mm")
+ ggsave("grafico_linhas_An1.pdf", width = 158, height = 93, units = "mm")
 
 
  
