@@ -44,18 +44,18 @@ ggsave("grafico_bi_boxplot_An2.pdf", width = 158, height = 93, units = "mm")
 
 #quadro de medidas
 
-dados_p_medidas <-dados_sem_duplicatas%>%
+dados_p_medidas <- dados_sem_duplicatas %>%
   group_by(Brand) 
 
 quadro_medidas <- dados_p_medidas %>%
   summarize(
-    Média = mean(Price),
-    Desvio_Padrão = sd(Price),
-    Mínimo = min(Price),
-    Quartil_1 = quantile(Price, 0.25),
-    Mediana = median(Price),
-    Quartil_3 = quantile(Price, 0.75),
-    Máximo = max(Price)
+    Média = formatC(mean(Price), format = "f", digits = 2),
+    Desvio_Padrão = formatC(sd(Price), format = "f", digits = 2),
+    Mínimo = formatC(min(Price), format = "f", digits = 2),
+    Quartil_1 = formatC(quantile(Price, 0.25), format = "f", digits = 2),
+    Mediana = formatC(median(Price), format = "f", digits = 2),
+    Quartil_3 = formatC(quantile(Price, 0.75), format = "f", digits = 2),
+    Máximo = formatC(max(Price), format = "f", digits = 2)
   )
 quadro_medidas
 
