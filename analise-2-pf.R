@@ -5,14 +5,7 @@ selecionando_marcas <- select(vendas,"Brand","Price","Product ID")
 tabela_marcas <- na.omit(selecionando_marcas)
 dados_sem_duplicatas <- tabela_marcas%>%
   distinct(`Product ID`, .keep_all = TRUE)
-tabela_marcas_preco <- dados_sem_duplicatas %>%
-  group_by(Brand) %>%
-  summarise(Preço = sum(Price)) %>%
-  arrange(desc(Preço))
-tabela_marcas_preco
-dados_somados <-tabela_marcas_preco  %>%
-  mutate(percentagem = sprintf("%.2f%%", round((Preço / sum(Preço)) * 100, 2)))
-dados_somados
+
 
 #padronização
 theme_estat <- function(...) {
@@ -39,18 +32,35 @@ theme_estat <- function(...) {
 cores_estat <- c('#A11D21','#003366','#CC9900','#663333','#FF6600','#CC9966','#999966','#006606','#008091','#041835','#666666')
 
 
-# grafico de barras
-ggplot(dados_somados) +
-aes(x =reorder(Brand,-Preço), y = Preço) +
-  geom_bar(stat = "identity", fill = "#A11D21", width = 0.7) +
-  geom_text(aes(label = paste(Preço, " (", gsub("\\.", ",", percentagem), ")", sep = "")), 
-            vjust = -0.5, size = 3)  +
+# boxplot
+ggplot(dados_sem_duplicatas, aes(x = Brand, y = Price)) +
+  geom_boxplot(fill = c("#A11D21"), width = 0.5) +
+  stat_summary(
+    fun = "mean", geom = "point", shape = 23, size = 3, fill = "white"
+  ) +
   labs(x = "Marca", y = "Preço") +
   theme_estat()
-ggsave("grafico_colunas_An2.pdf", width = 158, height = 93, units = "mm")
+ggsave("grafico_bi_boxplot_An2.pdf", width = 158, height = 93, units = "mm")
 
-# tabela com a quantidade de roupas por marca e o preço médio
-tabela_preço_marca <- dados_sem_duplicatas  %>%
-  group_by(Brand) %>%
-  summarise(Quantidade =n(),PrecoMedio = mean(Price))
-tabela_preço_marca  
+#quadro de medidas
+
+dados_p_medidas <-dados_sem_duplicatas%>%
+  group_by(Brand) 
+
+quadro_medidas <- dados_p_medidas %>%
+  summarize(
+    Média = mean(Price),
+    Desvio_Padrão = sd(Price),
+    Mínimo = min(Price),
+    Quartil_1 = quantile(Price, 0.25),
+    Mediana = median(Price),
+    Quartil_3 = quantile(Price, 0.75),
+    Máximo = max(Price)
+  )
+quadro_medidas
+
+# analise de comparacao das médias(kruskal-wallis)
+
+kruskal_test_result <- kruskal.test(Price ~ Brand, data = dados_sem_duplicatas)
+kruskal_test_result 
+  
