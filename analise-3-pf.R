@@ -2,11 +2,11 @@
 
 #organizando o dataframe
 vendas_3 <- select(vendas,"Category","Color","Product ID")
-tabela_sem_NA <- na.omit(vendas_3)
-dados_nao_duplicados <- tabela_sem_NA%>%
+dados_nao_duplicados <- vendas_3%>%
   distinct(`Product ID`, .keep_all = TRUE)
-tabela_categoria_cor <- select(dados_nao_duplicados,"Category","Color")
-tabela_h_m_cor <- filter(tabela_categoria_cor, Category != "Kids' Fashion")
+dados_nao_duplicados <- select(dados_nao_duplicados, "Category", "Color")
+tabela_sem_NA <- na.omit(dados_nao_duplicados)
+tabela_h_m_cor <- filter(tabela_sem_NA, Category != "Kids' Fashion")
 tabela_h_m_cor <- tabela_h_m_cor %>%
   group_by(Color, Category) %>%
   summarise(freq = n()) %>%
@@ -71,10 +71,17 @@ ggplot(tabela_h_m_cor) +
   ) +
   labs(x = "Cor", y = "Frequência") +
   theme_estat()
-ggsave("colunas-bi-freq.pdf", width = 228, height = 116, units = "mm")
+ggsave("grafico-coluna-An3.pdf", width = 248, height = 114, units = "mm")
 
 
 # Teste qui-quadrado
+vendas_3 <- select(vendas,"Category","Color","Product ID")
+dados_nao_duplicados <- vendas_3%>%
+  distinct(`Product ID`, .keep_all = TRUE)
+dados_nao_duplicados <- select(dados_nao_duplicados, "Category", "Color")
+tabela_sem_NA <- na.omit(dados_nao_duplicados)
+tabela_h_m_cor <- filter(tabela_sem_NA, Category != "Kids' Fashion")
+
 
 tabela_contingencia <- table(tabela_h_m_cor$Category, tabela_h_m_cor$Color)
 tabela_contingencia
