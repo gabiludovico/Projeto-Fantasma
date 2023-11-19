@@ -58,9 +58,3 @@ quadro_medidas <- dados_p_medidas %>%
     Máximo = formatC(max(Rating), format = "f", digits = 2)
   )
 quadro_medidas
-
-# analise de comparacao das médias(kruskal-wallis)
-
-kruskal_test_result <- kruskal.test(Rating ~ Brand, data = rating_marca_2)
-kruskal_test_result 
-
