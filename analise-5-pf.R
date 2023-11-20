@@ -1,14 +1,16 @@
 
 #Análise 5:Frequência de cada tipo de devolução por marca
 
-tabela_marca <- vendas %>%
-  select("Brand","Product ID","Motivo devolução") 
 
-tabela_sem_duplicatas <- tabela_marca %>%
-  distinct(Brand, `Product ID`,`Motivo devolução`, .keep_all = TRUE)
-tabela_sem_duplicatas <- tabela_sem_duplicatas %>%
-  select("Brand","Motivo devolução")
-tabela_sem_NA <- na.omit(tabela_sem_duplicatas)
+#organizando data-frame
+
+devolução <- merge(devolução, vendas %>% select(`Unique ID`, Brand) %>% distinct() ,by = "Unique ID", all.x = TRUE)
+
+tabela_marca <-devolução %>%
+  select("Brand","Motivo devolução") 
+
+tabela_sem_NA <- na.omit(tabela_marca)
+
 
 tabela_frequencia <- tabela_sem_NA %>%
   group_by(Brand, `Motivo devolução`) %>%
@@ -68,15 +70,13 @@ ggsave("grafico-coluna-An5.pdf", width = 307, height = 114, units = "mm")
 
 # teste qui-quadrado
 
-tabela_marca <- vendas %>%
-  select("Brand","Product ID","Motivo devolução") 
+devolução <- merge(devolução, vendas %>% select(`Unique ID`, Brand) %>% distinct() ,by = "Unique ID", all.x = TRUE)
 
-tabela_sem_duplicatas <- tabela_marca %>%
-  distinct(Brand, `Product ID`,`Motivo devolução`, .keep_all = TRUE)
-tabela_sem_duplicatas <- tabela_sem_duplicatas %>%
-  select("Brand","Motivo devolução")
-tabela_sem_NA <- na.omit(tabela_sem_duplicatas)
-tabela_sem_NA
+tabela_marca <-devolução %>%
+  select("Brand","Motivo devolução") 
+
+tabela_sem_NA <- na.omit(tabela_marca)
+
 
 tabela_contingencia <- table(tabela_sem_NA$Brand, tabela_sem_NA$`Motivo devolução`)
 tabela_contingencia
