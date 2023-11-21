@@ -2,28 +2,28 @@
 #Análise 5:Frequência de cada tipo de devolução por marca
 
 
-#organizando data-frame
+#organizando dataframe
 
 devolução_atualizado <- merge(devolução_atualizado, vendas %>% select(`Unique ID`, Brand) %>% distinct() ,by = "Unique ID", all.x = TRUE)
 
-tabela_marca <-devolução_atualizado %>%
+dvmaTabelaMarca <-devolução_atualizado %>%
   select("Brand","Motivo devolução") 
 
-tabela_sem_NA <- na.omit(tabela_marca)
+dvmaTabelaSemNA <- na.omit(dvmaTabelaMarca)
 
 
-tabela_frequencia <- tabela_sem_NA %>%
+dvmaTabelaFrequencia <- dvmaTabelaSemNA %>%
   group_by(Brand, `Motivo devolução`) %>%
   summarize(Frequência = n()) %>%
   ungroup() %>%
   group_by(Brand) %>%
   mutate(total = sum(Frequência))
 
-tabela_frequencia<- tabela_frequencia %>%
+dvmaTabelaFrequencia<- dvmaTabelaFrequencia %>%
   mutate(porcentagem = sprintf("%.2f%%", (Frequência / total) * 100)) %>%
   mutate(porcentagem = str_replace(porcentagem,"\\.", ","))
 
-legendas <- str_squish(str_c(tabela_frequencia$Frequência, " (", tabela_frequencia$porcentagem, ")"))
+legendas <- str_squish(str_c(dvmaTabelaFrequencia$Frequência, " (", dvmaTabelaFrequencia$porcentagem, ")"))
 
 
 # padronizacao pra gráfico 
@@ -55,7 +55,7 @@ cores_estat <- c('#A11D21','#003366','#CC9900','#663333','#FF6600','#CC9966','#9
 
 # grafico frequencia devolucao por marca
 
-ggplot(tabela_frequencia) +
+ggplot(dvmaTabelaFrequencia) +
   aes(x = fct_reorder(Brand, total, .desc = T), y = Frequência,
         fill = `Motivo devolução`, label = legendas) +
   geom_col(position = position_dodge2(preserve = "single", padding = 0)) +
@@ -72,15 +72,15 @@ ggsave("grafico-coluna-An5.pdf", width = 307, height = 114, units = "mm")
 
 devolução_atualizado <- merge(devolução_atualizado, vendas %>% select(`Unique ID`, Brand) %>% distinct() ,by = "Unique ID", all.x = TRUE)
 
-tabela_marca <-devolução_atualizado %>%
+dvmaTabelaMarca <-devolução_atualizado %>%
   select("Brand","Motivo devolução") 
 
-tabela_sem_NA <- na.omit(tabela_marca)
+dvmaTabelaSemNA <- na.omit(dvmaTabelaMarca)
 
 
-tabela_contingencia <- table(tabela_sem_NA$Brand, tabela_sem_NA$`Motivo devolução`)
-tabela_contingencia
-resultado_teste_chisq <- chisq.test(tabela_contingencia)
-resultado_teste_chisq 
+dvmaTabelaContingencia <- table(dvmaTabelaSemNA$Brand, dvmaTabelaSemNA$`Motivo devolução`)
+dvmaTabelaContingencia
+dvmaTesteChisq <- chisq.test(dvmaTabelaContingencia)
+dvmaTesteChisq 
 
 

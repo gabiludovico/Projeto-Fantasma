@@ -1,11 +1,11 @@
 #Análise 2: Variação do preço por marca
 
+# organizando dataframe
 
-selecionando_marcas <- select(vendas,"Brand","Price","Product ID")
-tabela_marcas <- na.omit(selecionando_marcas)
-dados_sem_duplicatas <- tabela_marcas%>%
+pmSelecionandoMarcas<- select(vendas,"Brand","Price","Product ID")
+pmTabelaMarcas <- na.omit(selecionando_marcas)
+pmDadosSemDuplicatas <- pmTabelaMarcas%>%
   distinct(`Product ID`, .keep_all = TRUE)
-
 
 #padronização
 theme_estat <- function(...) {
@@ -33,7 +33,7 @@ cores_estat <- c('#A11D21','#003366','#CC9900','#663333','#FF6600','#CC9966','#9
 
 
 # boxplot
-ggplot(dados_sem_duplicatas, aes(x = Brand, y = Price)) +
+ggplot(pmDadosSemDuplicatas, aes(x = Brand, y = Price)) +
   geom_boxplot(fill = c("#A11D21"), width = 0.5) +
   stat_summary(
     fun = "mean", geom = "point", shape = 23, size = 3, fill = "white"
@@ -44,10 +44,10 @@ ggsave("grafico_bi_boxplot_An2.pdf", width = 158, height = 93, units = "mm")
 
 #quadro de medidas
 
-dados_p_medidas <- dados_sem_duplicatas %>%
+pmDadosParaMedidas <- pmDadosSemDuplicatas %>%
   group_by(Brand) 
 
-quadro_medidas <- dados_p_medidas %>%
+pmQuadroMedidas<- pmDadosParaMedidas %>%
   summarize(
     Média = formatC(mean(Price), format = "f", digits = 2),
     Desvio_Padrão = formatC(sd(Price), format = "f", digits = 2),
@@ -57,10 +57,11 @@ quadro_medidas <- dados_p_medidas %>%
     Quartil_3 = formatC(quantile(Price, 0.75), format = "f", digits = 2),
     Máximo = formatC(max(Price), format = "f", digits = 2)
   )
-quadro_medidas
+pmQuadroMedidas
 
 # analise de comparacao das médias(kruskal-wallis)
 
-kruskal_test_result <- kruskal.test(Price ~ Brand, data = dados_sem_duplicatas)
-kruskal_test_result 
-  
+pmTesteKruskal <- kruskal.test(Price ~ Brand, data = pmDadosSemDuplicatas)
+pmTesteKruskal 
+
+

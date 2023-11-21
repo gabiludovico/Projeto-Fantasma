@@ -1,24 +1,24 @@
 # Análise 3: Relação entre categorias (apenas feminino e masculino) e cor
 
 #organizando o dataframe
-vendas_3 <- select(vendas,"Category","Color","Product ID")
-dados_nao_duplicados <- vendas_3%>%
+catcoVendas <- select(vendas,"Category","Color","Product ID")
+catcoDadosNaoDuplicados <- catcoVendas%>%
   distinct(`Product ID`, .keep_all = TRUE)
-dados_nao_duplicados <- select(dados_nao_duplicados, "Category", "Color")
-tabela_sem_NA <- na.omit(dados_nao_duplicados)
-tabela_h_m_cor <- filter(tabela_sem_NA, Category != "Kids' Fashion")
-tabela_h_m_cor <- tabela_h_m_cor %>%
+catcoDadosNaoDuplicados <- select(catcoDadosNaoDuplicados, "Category", "Color")
+catcoTabelaSemNA <- na.omit(catcoDadosNaoDuplicados)
+catcoTabelaHMCor <- filter(catcoTabelaSemNA, Category != "Kids' Fashion")
+catcoTabelaHMCor <- catcoTabelaHMCor %>%
   group_by(Color, Category) %>%
   summarise(freq = n()) %>%
   ungroup() %>%
   group_by(Color) %>%
   mutate(total = sum(freq))
-tabela_h_m_cor <- tabela_h_m_cor%>%
+catcoTabelaHMCor <- catcoTabelaHMCor%>%
   rename(Categoria = Category) %>%
   mutate(Categoria = recode(Categoria, 
                             "Men's Fashion" = "Moda Masculina",
                             "Women's Fashion" = "Moda Feminina"))
-tabela_h_m_cor <- tabela_h_m_cor %>%
+catcoTabelaHMCor <- catcoTabelaHMCor %>%
   mutate(Color = recode(Color, 
                         "White"= "Branco",
                         "Yellow" = "Amarelo",
@@ -26,11 +26,11 @@ tabela_h_m_cor <- tabela_h_m_cor %>%
                         "Green" = "Verde",
                         "Red" = "Vermelho",
                         "Black" = "Preto"))
-tabela_h_m_cor<- tabela_h_m_cor %>%
+catcoTabelaHMCor<- catcoTabelaHMCor %>%
   mutate(porcentagem = sprintf("%.2f%%", (freq / total) * 100)) %>%
   mutate(porcentagem = str_replace(porcentagem,"\\.", ","))
 
-legendas <- str_squish(str_c(tabela_h_m_cor$freq, " (", tabela_h_m_cor$porcentagem, ")"))
+legendas <- str_squish(str_c(catcoTabelaHMCor$freq, " (", catcoTabelaHMCor$porcentagem, ")"))
                       
 
 # padronizacao pra gráfico 
@@ -60,7 +60,7 @@ cores_estat <- c('#A11D21','#003366','#CC9900','#663333','#FF6600','#CC9966','#9
 
 
 # gráfico de colunas cor por categoria
-ggplot(tabela_h_m_cor) +
+ggplot(catcoTabelaHMCor) +
   aes(x = fct_reorder(Color, freq, .desc = T), y = freq,
       fill = Categoria, label = legendas) +
   geom_col(position = position_dodge2(preserve = "single", padding = 0)) +
@@ -75,16 +75,16 @@ ggsave("grafico-coluna-An3.pdf", width = 248, height = 114, units = "mm")
 
 
 # Teste qui-quadrado
-vendas_3 <- select(vendas,"Category","Color","Product ID")
-dados_nao_duplicados <- vendas_3%>%
+catcoVendas <- select(vendas,"Category","Color","Product ID")
+catcoDadosNaoDuplicados <- catcoVendas%>%
   distinct(`Product ID`, .keep_all = TRUE)
-dados_nao_duplicados <- select(dados_nao_duplicados, "Category", "Color")
-tabela_sem_NA <- na.omit(dados_nao_duplicados)
-tabela_h_m_cor <- filter(tabela_sem_NA, Category != "Kids' Fashion")
+catcoDadosNaoDuplicados <- select(catcoDadosNaoDuplicados, "Category", "Color")
+catcoTabelaSemNA <- na.omit(catcoDadosNaoDuplicados)
+catcoTabelaHMCor <- filter(catcoTabelaSemNA, Category != "Kids' Fashion")
 
 
-tabela_contingencia <- table(tabela_h_m_cor$Category, tabela_h_m_cor$Color)
-tabela_contingencia
-resultado_teste_chisq <- chisq.test(tabela_contingencia)
-resultado_teste_chisq 
+catcoTabelaContingencia<- table(catcoTabelaHMCor$Category, catcoTabelaHMCor$Color)
+catcoTabelaContingencia
+catcoTesteChisq <- chisq.test(catcoTabelaContingencia)
+catcoTesteChisq 
 

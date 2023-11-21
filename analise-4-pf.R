@@ -1,11 +1,11 @@
 # Análise 4: Relação entre preço e avaliação
 
 # organizando dataframe
-vendas_4 <- select(vendas,"Price","Rating","Product ID")
-dados_nao_duplicados <- vendas_4%>%
+paVendas <- select(vendas,"Price","Rating","Product ID")
+paDadosNaoDuplicados <- paVendas%>%
   distinct(`Product ID`, .keep_all = TRUE)
-dados_nao_duplicados <- select(dados_nao_duplicados, "Price", "Rating")
-tabela_sem_NA <- na.omit(dados_nao_duplicados)
+paDadosNaoDuplicados <- select(paDadosNaoDuplicados, "Price", "Rating")
+paTabelaSemNA <- na.omit(paDadosNaoDuplicados)
 
 # padronização
 theme_estat <- function(...) {
@@ -35,7 +35,7 @@ cores_estat <- c('#A11D21','#003366','#CC9900','#663333','#FF6600','#CC9966','#9
 
 # gráfico de dispersão
 
-ggplot(tabela_sem_NA) +
+ggplot(paTabelaSemNA) +
   aes(x = Price, y = Rating) +
   geom_point(colour = "#A11D21", size = 3) +
   labs(
@@ -47,7 +47,7 @@ ggsave("dispersao-bi.pdf", width = 158, height = 93, units = "mm")
 
 
 # qqplot
-ggplot(tabela_sem_NA) + 
+ggplot(paTabelaSemNA) + 
   aes(sample = Rating) +
   stat_qq(colour = "#A11D21") +
   stat_qq_line(size = 0.8) + 
@@ -58,7 +58,7 @@ ggplot(tabela_sem_NA) +
   theme_estat()
 ggsave("qq_plot1.pdf", width = 158, height = 93, units = "mm")
 
-ggplot(tabela_sem_NA) + 
+ggplot(paTabelaSemNA) + 
   aes(sample = Price) +
   stat_qq(colour = "#A11D21") +
   stat_qq_line(size = 0.8) + 
@@ -70,13 +70,15 @@ ggplot(tabela_sem_NA) +
 ggsave("qq_plot2.pdf", width = 158, height = 93, units = "mm")
 
 # Shapiro-Wilk
-shapiro_test1 <- shapiro.test(tabela_sem_NA$Price)
-shapiro_test1
+paTesteShapiroPreco <- shapiro.test(paTabelaSemNA$Price)
+paTesteShapiroPreco
 
-shapiro_test2 <- shapiro.test(tabela_sem_NA$Rating)
-shapiro_test2
+paTesteShapiroRating <- shapiro.test(paTabelaSemNA$Rating)
+paTesteShapiroRating
 
 
 # correlacao de pearson
 
-correlacao_pearson <- with(tabela_sem_NA, cor.test(Price, Rating, alternative = "two.sided", method = "pearson"))
+paCorrelacaoPearson <- with(paTabelaSemNA, cor.test(Price, Rating, alternative = "two.sided", method = "pearson"))
+paCorrelacaoPearson
+
