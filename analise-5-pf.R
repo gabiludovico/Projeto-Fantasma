@@ -4,9 +4,9 @@
 
 #organizando data-frame
 
-devolução <- merge(devolução, vendas %>% select(`Unique ID`, Brand) %>% distinct() ,by = "Unique ID", all.x = TRUE)
+devolução_atualizado <- merge(devolução_atualizado, vendas %>% select(`Unique ID`, Brand) %>% distinct() ,by = "Unique ID", all.x = TRUE)
 
-tabela_marca <-devolução %>%
+tabela_marca <-devolução_atualizado %>%
   select("Brand","Motivo devolução") 
 
 tabela_sem_NA <- na.omit(tabela_marca)
@@ -70,9 +70,9 @@ ggsave("grafico-coluna-An5.pdf", width = 307, height = 114, units = "mm")
 
 # teste qui-quadrado
 
-devolução <- merge(devolução, vendas %>% select(`Unique ID`, Brand) %>% distinct() ,by = "Unique ID", all.x = TRUE)
+devolução_atualizado <- merge(devolução_atualizado, vendas %>% select(`Unique ID`, Brand) %>% distinct() ,by = "Unique ID", all.x = TRUE)
 
-tabela_marca <-devolução %>%
+tabela_marca <-devolução_atualizado %>%
   select("Brand","Motivo devolução") 
 
 tabela_sem_NA <- na.omit(tabela_marca)
