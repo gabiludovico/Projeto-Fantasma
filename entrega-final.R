@@ -89,11 +89,12 @@ fapcPrecoTotal
 
 #Fazendo gráfico de linhas
 
-ggplot(fapcTabelaVendas, aes(x = Mes, y= fapcTotalVendas, group = Categoria, colour = Categoria)) +
-  geom_line(size= 1) +
-  geom_point(size=2) +
+ggplot(fapcTabelaVendas, aes(x = Mes, y = fapcTotalVendas, group = Categoria, colour = Categoria)) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
   scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
-  labs(x= "Mês", y = "Faturamento") + 
+  labs(x = "Mês", y = "Faturamento") +
+  ylim(0, 4000) + 
   theme_estat() 
 ggsave("grafico_linhas_An1.pdf", width = 158, height = 93, units = "mm")
 
@@ -228,11 +229,13 @@ catcoTesteChisq
 # organizando dataframe
 
 paVendas <- select(vendas,"Price","Rating","Product ID")
+
 paDadosNaoDuplicados <- paVendas%>%
   distinct(`Product ID`, .keep_all = TRUE)
-paDadosNaoDuplicados <- select(paDadosNaoDuplicados, "Price", "Rating")
-paTabelaSemNA <- na.omit(paDadosNaoDuplicados)
 
+paDadosNaoDuplicados <- select(paDadosNaoDuplicados, "Price", "Rating")
+
+paTabelaSemNA <- na.omit(paDadosNaoDuplicados)
 
 # gráfico de dispersão
 
@@ -278,7 +281,6 @@ paTesteShapiroPreco
 
 paTesteShapiroRating <- shapiro.test(paTabelaSemNA$Rating)
 paTesteShapiroRating
-
 
 # correlacao de pearson
 
@@ -359,8 +361,7 @@ avmaVendasAvMedia <- aggregate(avmaVendasRatingBrand$Rating, by=list(avmaVendasR
 
 colnames(avmaVendasAvMedia) <- c("Marca", "Avaliacao_Media")
 
-avmaVendasAvMedia$Porcentagem <- paste0(gsub("\\.", ",", round(avmaVendasAvMedia$Avaliacao_Media, 2)), 
- " (", gsub("\\.", ",", sprintf("%.2f", (avmaVendasAvMedia$Avaliacao_Media / sum(avmaVendasAvMedia$Avaliacao_Media)) * 100)), "%)")
+avmaVendasAvMedia$Porcentagem <- gsub("\\.", ",", round(avmaVendasAvMedia$Avaliacao_Media, 2))
 
 # gráfico de colunas avaliacao media por marca 
 

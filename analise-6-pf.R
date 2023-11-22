@@ -13,8 +13,7 @@ avmaVendasAvMedia <- aggregate(avmaVendasRatingBrand$Rating, by=list(avmaVendasR
 
 colnames(avmaVendasAvMedia) <- c("Marca", "Avaliacao_Media")
 
-avmaVendasAvMedia$Porcentagem <- paste0(gsub("\\.", ",", round(avmaVendasAvMedia$Avaliacao_Media, 2)), 
- " (", gsub("\\.", ",", sprintf("%.2f", (avmaVendasAvMedia$Avaliacao_Media / sum(avmaVendasAvMedia$Avaliacao_Media)) * 100)), "%)")
+avmaVendasAvMedia$Porcentagem <- gsub("\\.", ",", round(avmaVendasAvMedia$Avaliacao_Media, 2))
 
 
 #padronização

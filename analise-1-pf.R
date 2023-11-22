@@ -71,13 +71,14 @@ fapcPrecoTotal
  cores_estat <- c('#A11D21','#003366','#CC9900','#663333','#FF6600','#CC9966','#999966','#006606','#008091','#041835','#666666')
  
  #Fazendo gráfico de linhas
- ggplot(fapcTabelaVendas, aes(x = Mes, y= fapcTotalVendas, group = Categoria, colour = Categoria)) +
-   geom_line(size= 1) +
-   geom_point(size=2) +
+ ggplot(fapcTabelaVendas, aes(x = Mes, y = fapcTotalVendas, group = Categoria, colour = Categoria)) +
+   geom_line(size = 1) +
+   geom_point(size = 2) +
    scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
-   labs(x= "Mês", y = "Faturamento") + 
+   labs(x = "Mês", y = "Faturamento") +
+   ylim(0, 4000) + 
    theme_estat() 
  ggsave("grafico_linhas_An1.pdf", width = 158, height = 93, units = "mm")
-
+ 
 
  
